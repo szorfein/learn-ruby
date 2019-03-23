@@ -1,4 +1,4 @@
-" class in Maj "
+" Basic class, name of class in Maj "
 class Dog
   # setters
   def set_name( aName = "Default name: Noname" )

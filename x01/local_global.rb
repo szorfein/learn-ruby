@@ -1,20 +1,20 @@
-localvar = "Hello"
-$globalvar = "Goodbye"
+local_var = "Hello"
+# global var are written in MAJ (ruby convention)
+$GLOBAL_VAR = "Goodbye"
 
 def amethod
-  localvar = 10
-  puts localvar
+  local_var = 10
+  puts local_var
   # we can use < " " + var > or " #{var}"
-  puts "global var is = " + $globalvar
+  puts "global var is = " + $GLOBAL_VAR
 end
 
 def anotherMethod
-  localvar = 500
-  $globalvar = "bonjour"
-  puts( localvar )
-  puts( "Erase Goodbye with #{$globalvar}" )
+  local_var = 500
+  $GLOBAL_VAR = "bonjour"
+  puts( local_var )
+  puts( "Erase Goodbye with #{$GLOBAL_VAR}" )
 end
-
 
 amethod
 anotherMethod
