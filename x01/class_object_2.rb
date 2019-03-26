@@ -1,14 +1,4 @@
-class Thing
-  def set_name( aName )
-    @name = aName
-  end
-
-  def get_name
-    return @name
-  end
-end
-
-# Replace set_name with initialize
+# Replace set_name( aName ) with initialize
 class Treasure
   def initialize( aName, aDescription )
     @name = aName
@@ -18,10 +8,6 @@ class Treasure
     "The #{@name} Treasure is #{@description}\n"
   end
 end
-
-thing_1 = Thing.new
-thing_1.set_name( "A lovely Thing" )
-puts thing_1.get_name
 
 t1 = Treasure.new("Sword", "an Elvish weapon forged of gold")
 t2 = Treasure.new("Ring", "a magic ring of great power")
