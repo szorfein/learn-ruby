@@ -19,6 +19,12 @@ puts "look the four element = #{a0[4]}"
 for i in a3
   puts(i.inspect)
 end
+# or
+for i in 0..a3.size
+  puts a3[i]
+end
+# or again faster
+a3.each { |word| puts word }
 
 # indexing into Array
 arr_hello = ['h','e','l','l','o',' ','w','o','r','l','d']

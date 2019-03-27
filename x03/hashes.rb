@@ -28,6 +28,11 @@ puts h1['room2']
 hash = { red: "ruby", white: "diamond", green: "emerald" }
 puts hash[:red]
 
+# display with a loop
+hash.each { |entry| p entry }
+# or print the pair name, value
+hash.each { |name, value| puts "#{name} has #{value}" }
+
 # Complex collections
 users_list = {
   john: {
