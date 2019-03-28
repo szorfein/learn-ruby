@@ -1,5 +1,5 @@
 local_var = "Hello"
-# global var are written in MAJ (ruby convention)
+# global var are written in MAJ (ruby convention) and start by a $
 $GLOBAL_VAR = "Goodbye"
 
 def amethod

@@ -9,3 +9,11 @@ end
 
 tax = subtotal * taxrate
 puts "Tax on $#{subtotal} is $#{tax}, so grant total is $#{subtotal+tax}"
+
+value = 0
+if value.zero? then
+  puts "value is zero"
+end
+
+ninja = "on"
+puts "all right" if value == 0 && ninja == "on"
