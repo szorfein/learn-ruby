@@ -28,3 +28,19 @@ end
 
 thing.set_name( "A lovely Thing", "an Elvish weapon forged of gold" )
 puts thing.to_s
+
+# We can add singleton on a class too 
+class Area
+
+  # singleton
+  class << self
+    def rect( length, width, units="inches" )
+      area = length*width
+      printf( "The area of this rectangle is %.2f %s.", area, units )
+      sprintf( "%.2f", area )
+    end
+  end
+
+end
+
+Area.rect(10, 10)
