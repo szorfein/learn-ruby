@@ -14,21 +14,43 @@ just learning ruby :)
 - [Prev-Next](#prev-next)
 - [Reverse](#reverse)
 - [Length](#length)
+- [join](#join)
 
 ## Controls flow
 - [operators](#flow-operators)
 - [If then end](#if-then-end)
 - [case esac](#case-esac)
 - [input with gets](#input-gets)
+- [Unless](#unless)
 
 ## Loop
 - [while](#while)
+- [until](#until)
 - [for](#for)
+- [range](#range)
+
+## About Array
+- [array](#array)
+- [fist last](#fist-last)
+- [empty](#empty)
+- [shift pop insert](#shift-pop-insert)
+- [push unshift](#push-unshift)
+
+## About Hashes
+- [Hashes](#hashes)
+- [keys values](#keys-values)
+- [has value](#has-value-has-key)
+- [iterate a hashe](#iterate-a-hashe)
+- [delete an element](#delete-hashe)
 
 ## Functions
 - [********asterix parameters](#asterix-parameters)
 - [function default or optional](#function-default-or-optional)
 - [yield](#yield)
+
+## Symbols
+
+---
 
 ## Basics
 
@@ -57,6 +79,11 @@ just learning ruby :)
 
     >> "Hello".length
     4
+
+### join
+
+    >> [1, 2, 3].join(' plus ')
+    "1 plus 2 plus 3"
 
 ## Controls Flow
 
@@ -103,6 +130,13 @@ Use a `case esac` to print a dog name depend of the language:
 
     >> p dog
 
+### unless
+Rather than use the negation `!something`, use the keyword `unless`:
+
+    unless nil
+      puts "But i will get printed!"
+    end
+
 ### input gets
 
     print "Where to? (N, E, S, W): "
@@ -112,14 +146,147 @@ Use a `case esac` to print a dog name depend of the language:
 
 ### while
 
+    while something_is_the_case
+      # do something!
+    end 
+
+### until
+
+    until !something_is_the_sace
+      # do something!
+    end
+
 ### for
+
+    for task in todo_list
+      puts task
+    end
+
+### ranges
+To display by range
+
+    >> ('a'..'f').to_a
+    ["a", "b", "c", "d", "e", "f"]
+
+Number:
+
+    >> (1..9).to_a
+    [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 ### Array
 
     grocery_list = ["cheese", "bread", "grapes", "a festive hat for all occasions"]
     grocery_list.each { |item| next if item.empty? }
 
-### JSON
+Create an array:
+
+    order_two = Array.new(3, 'sunny_side_up_egg')
+    >> p order_two
+    ["sunny_side_up_egg", "sunny_side_up_egg", "sunny_side_up_egg"]
+
+Or shorcut with `%w( )`
+
+    order_two = %w(sunny_side_up_egg sunny_side_up_egg sunny_side_up_egg)
+    p order_two
+
+### fist
+
+    orders = %w(go pause sit)
+    >> orders.first
+    "go"
+
+    >> orders.last
+    "sit"
+
+### empty
+
+    >> order.empty
+    false
+
+### shift pop insert
+shift remove the first element of an array
+
+    >> orders.shift
+    "go"
+    >> p orders
+    ["pause sit"]
+
+pop remove the last elements
+
+    >> orders.pop
+    "sit"
+    >> p orders
+    ["pause"]
+
+### push unshift 
+push add a new element at the end
+
+    >> orders.push("run")
+    ["pause", "run"]
+
+Or shortcut with `<<`
+
+    >> orders << 'run'
+
+insert add a new element at the given place (start at 0)
+
+    >> orders.insert(1, 'observe')
+    ["pause", "observe", "run"]
+
+look an element
+
+    >> p orders[1]
+    "observe"
+
+### Hashes
+
+    our_heroes = {
+      :the_king => 'the ruler of the kingdom',
+      :ruben => 'a Ruby wizard in training',
+      :scarlet => 'a Ruby wizard in training too'
+    }
+    
+Display one element
+
+    p our_heroes[:the_king]
+    'the ruler of the kingdom'
+
+### keys values
+use keys to show an array of keys
+
+    >> our_heroes.keys
+    [:the_king, :ruben, :scarlet]
+
+and `values`:
+
+    >> our_heroes.values
+    ['the ruler of the kingdom', 'a ruby wizard', 'a ruby wizard too']
+
+### has value - has key
+To test if a value exist, use `has_value`
+
+    >> our_heroes.has_value('the ruler of the kingdom')
+    true
+
+Or `has_key`
+
+    >> our_heroes.has_key(:the_king)
+
+### iterate a hashe
+
+    our_heroes.each do |hero, role|
+      puts "#{hero] is #{role}."
+    end
+
+### delete
+To delete an element, just do it:
+
+    >> our_heroes.delete(:ruben)
+
+### 2 dimensions
+To store a hashes in a hashe:
+
+    our_heroes[:gods_greek] = { :chaos => 'Erebus', :beauty => 'Aphrodite', :war => 'Ares' }
 
 ## Functions
 
