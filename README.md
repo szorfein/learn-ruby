@@ -15,14 +15,22 @@ just learning ruby :)
 - [Reverse](#reverse)
 - [Length](#length)
 
-## Statements
+## Controls flow
+- [operators](#flow-operators)
 - [If then end](#if-then-end)
 - [case esac](#case-esac)
+- [input with gets](#input-gets)
+
+## Loop
+- [while](#while)
+- [for](#for)
 
 ## Functions
-- [********asterix parameters](#asterix-paramters)
+- [********asterix parameters](#asterix-parameters)
 - [function default or optional](#function-default-or-optional)
 - [yield](#yield)
+
+## Basics
 
 ### Prev Next
 
@@ -50,7 +58,32 @@ just learning ruby :)
     >> "Hello".length
     4
 
+## Controls Flow
+
+### flow operators
+
+    if flow_rate < 50 || flow_rate > 50
+      puts "Warning!"
+    elsif flow_rate != 50
+      flow_rate = 50
+      puts "the flow_rate' been reset to #{flow_rate}"
+    else
+      puts "The flow_rate is #{flow_rate}."
+    end
+
+We have too: `<`, `<=`, `>`, `>=`, `==` and `!=` like any other language.
+
 ### if then end
+
+    flowmatic_on = true
+    water_available = true
+    if flowmatic_on && water_available
+      flow_rate = 50
+    elsif !flowmatic_on
+      puts "Flowmatic is off!"
+    else
+      puts "No water!"
+    end
 
 ### case esac
 Use a `case esac` to print a dog name depend of the language:  
@@ -68,7 +101,27 @@ Use a `case esac` to print a dog name depend of the language:
         "dog"
       end
 
-      >> p dog
+    >> p dog
+
+### input gets
+
+    print "Where to? (N, E, S, W): "
+    direction = gets.chomp
+
+    puts "#{direction}, you say? A fine choice!"
+
+### while
+
+### for
+
+### Array
+
+    grocery_list = ["cheese", "bread", "grapes", "a festive hat for all occasions"]
+    grocery_list.each { |item| next if item.empty? }
+
+### JSON
+
+## Functions
 
 ### asterix parameters
 To declare many things with one arguments, use this:
@@ -77,7 +130,9 @@ To declare many things with one arguments, use this:
       puts ninjas
     end
 
-    >> declare_ninja('')
+    >> declare_ninja('Oda', 'Kirigajure')
+    Oda
+    Kirigajure
 
 ### function default or optional
 Default parameter are defined like:
