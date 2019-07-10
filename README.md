@@ -48,7 +48,9 @@ just learning ruby :)
 - [function default or optional](#function-default-or-optional)
 - [yield](#yield)
 
-## Symbols
+## Class
+- [definition](#class-definition)
+- [class variable](#class-variable)
 
 ---
 
@@ -332,3 +334,52 @@ Second example:
     >> block_party_part_two('Haldo') { |name| puts "This is #{name}'s party!" }
     This is Haldo's party!
     
+### class definition
+
+    class Minstrel
+      def initialize(name)
+        @name = name
+      end
+
+      def introduce
+        puts "My name is #{@name}!"
+      end
+
+      def sing
+        puts 'Tralala'
+      end
+    end
+
+To use:
+
+    >> wherefore = Minstrel.new('Wherefore')
+    >> wherefoce.introduce
+    My name is Wherefore!
+
+### class variable
+Class variable are prefix with two `@@`, a class variable can keep the track of how many ninjas instance we create.  
+
+    class Ninja
+      @@number_of_ninjas = 0
+
+      def initialise
+        @@number_of_ninjas += 1
+      end
+
+      def self.number_of_ninjas
+        @@number_of_ninjas
+      end
+    end
+
+## instance variables
+Are created with only one prefix `@`, they contain new value for each instance of the class:
+
+    class Weezard
+      def initialize(name, power='Invisible')
+        @name  name
+        @power = power
+        @spells = 5
+      end
+    end
+
+### getters setters
