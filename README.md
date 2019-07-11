@@ -56,6 +56,9 @@ just learning ruby :)
 
 ## Modular Code
 - [modules](#modules)
+- [constants](#constant)
+- [extend](#extend)
+- [from another file](#from-another-file)
 ---
 
 ## Basics
@@ -478,4 +481,69 @@ The `super` keyword is used to be able to use all variables from the main class,
 ## Modular codes
 
 ### modules
+
+    module Colorize
+     def color
+       [:red, :blue, :green, :yellow].sample
+     end
+    end
+
+We can include a module in a class like this:
+
+    class Paint
+      include Colorize
+    end
+
+    >> paint = Paint.new
+    >> paint.color
+    => :green
+
+### constants
+Constant are variables with a value who don't change once you set them.  
+
+     >> RUBY = 'Wonderfull'
+     "Wonderfull"
+
+     >> RUBY = 'Stupendous'
+     (irb):2: warning: alrealy initialized constant RUBY
+
+A recommended practice is to set them in CAPS !
+
+    module Strongbox
+      GOLD = 10
+    end
+
+To access to the variable, use this:
+
+    >> Strongbox::GOLD
+    10
+
+### extend
+If you need modifying `variable` or `function` from a module, you have to use `extend` rather than `include`.  
+
+    class Paint
+      extend Colorize
+    end
+
+### from another file
+
+    require './colorize'
+
+    class PandaFood < Food
+      include Colorize
+      
+      attr_reader :calories
+
+      CALORIES_PER_SERVING = 1000
+
+      def initialize
+        @calories = CALORIES_PER_SERVING
+      end
+    end
+
+    >> hogarths_food = PandaFood.new
+    >> hogarths_food.calories
+    1000
+    >> hogarths_food.color
+    :yellow
 
