@@ -51,7 +51,11 @@ just learning ruby :)
 ## Class
 - [definition](#class-definition)
 - [class variable](#class-variable)
+- [inherit](#inherit)
+- [super](#super)
 
+## Modular Code
+- [modules](#modules)
 ---
 
 ## Basics
@@ -383,3 +387,95 @@ Are created with only one prefix `@`, they contain new value for each instance o
     end
 
 ### getters setters
+setters without special method
+Write a file called `minstrel.rb`:
+
+    class Minstrel
+      def initialize(name)
+        @name = name
+       end
+
+       def name
+         @name
+       end
+
+       def name=(new_name)
+         @name = new_name
+       end
+     end
+
+`irb`
+
+    >> load "minstrel.rb"
+    >> minstrel = Minstrel.new('wherefore')
+    >> minstrel.name
+    "whereforce"
+  
+With the special method `attr_accessor`.
+
+    class Minstrel
+      attr_accessor :name
+      attr_reader :ballad
+
+      def initialize(name)
+        @name = name
+        @ballad = "The Ballad of Chucky Jim"
+      end
+    end
+
+    >> whereforce = Minstrel.new("whereforce")
+    whereforce.name
+
+### inherit
+For a main class `MySuperclass`
+
+    class MySuperclass
+      def say_hello
+        puts 'Hello!'
+      end
+    end
+
+Second class inherit:
+
+    class MySubclass < MySuperclass
+      def say_goodbye
+        puts 'Goodbye!'
+      end
+    end
+
+And usage:
+
+    >> suby = MySubclass.new
+    >> suby.say_hello
+    Hello!
+
+    >> suby.say_goodbye
+    Goodbye!
+
+### super
+The `super` keyword is used to be able to use all variables from the main class, e.g:
+
+    class Animal
+      attr_accessor :name
+
+      def initialize(name, legs=4)
+        @name = name
+        @legs = legs
+      end
+    end
+
+    class Dog < Animal
+      def initialize(name)
+        puts 'just made a new dog!'
+        super
+      end
+    end
+
+    >> dog = Dog.new('Bigelow')
+    Just made a new dog!
+    => #<Dog:0x... @name="Bigelow", @legs=4>
+
+## Modular codes
+
+### modules
+
