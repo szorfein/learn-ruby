@@ -1,12 +1,6 @@
 # learning-ruby
 just learning ruby :)
 
-+ x01 - Base
-+ x02 - Class, Method
-+ x03 - Array, Hashes
-+ x04 - Deep class
-+ x05 - Test
-
 ## Table of contents
 
 ## Basic Things
@@ -15,6 +9,14 @@ just learning ruby :)
 - [Reverse](#reverse)
 - [Length](#length)
 - [join](#join)
+- [Numbers](#numbers)
+- [Date](#date)
+
+## Strings
+- [Upcase-Downcase](#upcase-downcase)
+- [Long Text](#long-text)
+- [gsub](#gsub)
+- [regex](#regex)
 
 ## Controls flow
 - [operators](#flow-operators)
@@ -22,6 +24,7 @@ just learning ruby :)
 - [case esac](#case-esac)
 - [input with gets](#input-gets)
 - [Unless](#unless)
+- [Ternary](#ternary)
 
 ## Loop
 - [while](#while)
@@ -42,6 +45,7 @@ just learning ruby :)
 - [has value](#has-value-has-key)
 - [iterate a hashe](#iterate-a-hashe)
 - [delete an element](#delete-hashe)
+- [hashes within hashes](#hashes-within-hashes)
 
 ## Functions
 - [********asterix parameters](#asterix-parameters)
@@ -59,6 +63,12 @@ just learning ruby :)
 - [constants](#constant)
 - [extend](#extend)
 - [from another file](#from-another-file)
+
+## I/O
+- [open](#open)
+- [close](#close)
+
+## [References](#references)
 ---
 
 ## Basics
@@ -93,6 +103,62 @@ just learning ruby :)
 
     >> [1, 2, 3].join(' plus ')
     "1 plus 2 plus 3"
+
+### numbers
+Floating
+
+    >> puts 10.0 / 3.0
+    3.33333333333
+
+Conversion number
+`to_i` (integer)
+
+    >> puts 5.7.to_i
+    5
+
+`to_f` (float)
+
+    >> puts 5.to_f
+    5.0
+
+### date
+
+    puts Time.now
+    puts Time.now - 10
+    puts Time.now + 86400
+
+## Strings 
+
+### upcase downcase
+
+    >> puts "This is a test".upcase
+    THIS IS A TEST
+
+    >> puts "HELLO World".downcase
+    hello world
+
+### long-text
+To write long text, use `<<` followed by any word
+
+    x = <<END_TEXT
+    This is the string
+    And a second REALLY usefull line
+    END_TEXT
+    => "This is the string\nAnd a second REALLY usefull line\n"
+
+### gsub
+
+    >> puts "This is a test".gsub('i', '')
+    ths s a test
+
+### regex
+    
+    puts "String contains no digits" unless "This is a test" =~ /[0-9]/
+
+To cut a text in a variable like in lua or other languages
+
+    x = "This is a test".match(/(\w+) (\w+)/ (\w+) (\w+)/)
+    => x[0] = This , x[1] = is , x[2] = a , x[3] = test
 
 ## Controls Flow
 
@@ -145,6 +211,12 @@ Rather than use the negation `!something`, use the keyword `unless`:
     unless nil
       puts "But i will get printed!"
     end
+
+### ternary
+
+    age = 10
+    type = age < 18 ? "child" : "adult"
+    puts "You are a " + type
 
 ### input gets
 
@@ -292,10 +364,26 @@ To delete an element, just do it:
 
     >> our_heroes.delete(:ruben)
 
-### 2 dimensions
+### hashes within hashes
 To store a hashes in a hashe:
 
-    our_heroes[:gods_greek] = { :chaos => 'Erebus', :beauty => 'Aphrodite', :war => 'Ares' }
+    people = {
+      'fred' = {
+        'name' => 'Fred Elliott',
+        'age' => 63,
+        'gender' => 'male',
+        'favorite painters' => ['Monet', 'Constable', 'Da Vinci']
+      },
+      'janet' => {
+        'name' => 'Janet S Porter',
+        'age' => 55,
+        'gender' => 'female'
+      }
+    }
+
+    >> puts people['fred']['age']
+    >> puts people['janet']['gender']
+    >> puts people['janet']
 
 ## Functions
 
@@ -547,3 +635,45 @@ If you need modifying `variable` or `function` from a module, you have to use `e
     >> hogarths_food.color
     :yellow
 
+## I/O
+
+### open
+
+    file = File.open('lunch.txt', 'r')
+    file.read
+    "One KAT-MAN-BLUE BURGER, PLEASE\n"
+
+One line way
+
+    File.open('lunch.txt', 'r') { |file| file.read }
+    "One KAT-MAN-BLUE BURGER, PLEASE\n"
+
+### close
+Always thing to close a file:
+
+    >> file = File.open('lunch.txt', 'r')
+    >> file.read
+    >> file.close
+
+### write
+`a+` create the file if not exist, else use only `w+` to write:
+
+    file = File.open('lunch.txt', 'a+')
+    file.write('THE MELTIEST OF GRILLED CHEESES')
+    file.puts('ONE KAT-MAN-BLEU BURGER, PLEASE')
+    file.rewind   
+    file.readlines
+    => ["THE MELTIEST OF GRILLED CHEESES\n", "ONE KAT-MAN-BLEU BURGER, PLEASE"]
+    file.close
+
+`file.rewind` serve to back at the beginning of the file.
+
+### avoid error
+
+    File.exist? 'lunch.txt'
+    => true
+
+## References
+- [Ruby Wizardry]() from Eric Weinstein
+- [The Book of Ruby]() from Huw Collingbourne
+- [Beginning Ruby]() from Peter Cooper
