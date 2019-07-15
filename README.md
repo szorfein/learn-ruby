@@ -11,6 +11,7 @@ just learning ruby :)
 - [join](#join)
 - [Numbers](#numbers)
 - [Date](#date)
+- [Random](#random)
 
 ## Strings
 - [Upcase-Downcase](#upcase-downcase)
@@ -54,19 +55,31 @@ just learning ruby :)
 
 ## Class
 - [definition](#class-definition)
+- [Struct](#struct)
 - [class variable](#class-variable)
 - [inherit](#inherit)
 - [super](#super)
+- [Nested class](#nested-class)
 
 ## Modular Code
 - [modules](#modules)
 - [constants](#constant)
 - [extend](#extend)
+- [class](#module-class)
 - [from another file](#from-another-file)
 
 ## I/O
 - [open](#open)
 - [close](#close)
+- [lines count](#lines-count)
+- [delete](#delete-file)
+
+## Errors
+- [raise](#raise)
+- [handle](#handle)
+
+## Server
+- [http](#http)
 
 ## [References](#references)
 ---
@@ -127,6 +140,11 @@ Conversion number
     puts Time.now - 10
     puts Time.now + 86400
 
+### random
+
+    >> puts rand(100000)
+    47877
+
 ## Strings 
 
 ### upcase downcase
@@ -145,6 +163,13 @@ To write long text, use `<<` followed by any word
     And a second REALLY usefull line
     END_TEXT
     => "This is the string\nAnd a second REALLY usefull line\n"
+
+Or with `%q{ }`
+
+    x = %q{
+    This is the string
+    And a second REALLY usefull line
+    }
 
 ### gsub
 
@@ -451,6 +476,18 @@ To use:
     >> wherefoce.introduce
     My name is Wherefore!
 
+### struct
+There are another way to create class with the keyword `struct`, the example above can be rewrite like this:
+
+    Minstrel = Struct.new(:name) do
+      def introduce
+        puts "My name is #{name}!"
+      end
+    end
+
+    >> Minstrel.new('Wherefore').introduce
+    My name is Wherefore!
+
 ### class variable
 Class variable are prefix with two `@@`, a class variable can keep the track of how many ninjas instance we create.  
 
@@ -566,6 +603,29 @@ The `super` keyword is used to be able to use all variables from the main class,
     Just made a new dog!
     => #<Dog:0x... @name="Bigelow", @legs=4>
 
+### nested class
+A nested class is a class in another class:
+
+    class Drawing
+      def self.give_a_circle
+        Circle.new
+      end
+
+      class Circle
+        def what_am_i
+          "This is a circle"
+        end
+      end
+    end
+
+    >> a = Drawing.give_a_cicle
+    >> puts a.what_am_i
+    This is a cirle
+
+    >> a = Drawing::Circle.new
+    >> puts a.what_am_i
+    This is a circle
+
 ## Modular codes
 
 ### modules
@@ -613,6 +673,25 @@ If you need modifying `variable` or `function` from a module, you have to use `e
       extend Colorize
     end
 
+### module class
+
+    module ToolBox
+      class Ruler
+        attr_accessor :length
+      end
+    end
+
+    module Country
+      class Ruler
+        attr_accessor :name
+      end
+    end
+
+    >> a = ToolBox::Ruler.new
+    a.length = 50
+    >> b = Country::Ruler.new
+    b.name  "Genghis Khan of Moskau"
+
 ### from another file
 
     require './colorize'
@@ -643,17 +722,38 @@ If you need modifying `variable` or `function` from a module, you have to use `e
     file.read
     "One KAT-MAN-BLUE BURGER, PLEASE\n"
 
+
 One line way
 
     File.open('lunch.txt', 'r') { |file| file.read }
     "One KAT-MAN-BLUE BURGER, PLEASE\n"
 
-### close
-Always thing to close a file:
+Or:
 
-    >> file = File.open('lunch.txt', 'r')
-    >> file.read
-    >> file.close
+    File.open('lunch.txt').each { |line| puts line }
+
+### close
+Always thing to close a file, we can write a class like this:
+
+    class MyFile
+      attr_reader :handle
+
+      def initialize(filename)
+        @handle = File.new(filename, "r")
+      end
+
+      def show_content
+        @handle.each { |line| puts line }
+      end
+
+      def finished
+        @handle.close
+      end
+    end
+
+    >> f = MyFile.new('lunch.txt')
+    >> f.show_content
+    >> f.finished
 
 ### write
 `a+` create the file if not exist, else use only `w+` to write:
@@ -668,10 +768,97 @@ Always thing to close a file:
 
 `file.rewind` serve to back at the beginning of the file.
 
+### delete file
+
+    File.delete("file1.txt")
+
+### Change directory
+
+    >> Dir.chdir("/tmp")
+    >> puts Dir.pwd
+    /tmp
+
 ### avoid error
 
     File.exist? 'lunch.txt'
     => true
+
+### count lines
+
+    line_count = 0
+    File.open('lunch.txt').each { |line| line_count += 1 }
+    p "There are #{line_count} entry"
+
+Or with `readlines`
+
+    lines = File.readlines('lunch.txt')
+    line_count = lines.size
+
+## Errors
+
+### raise
+To raise an error if a class is create without argument.
+
+    class BadDataException < RuntimeError
+    end
+
+    class Person 
+      def initialize(name)
+        raise BadDataException, "No name present" if name.empty?
+      end
+    end
+
+### handle
+
+    begin 
+      puts 10 / 0
+    rescue
+      puts "You caused an error!"
+    end
+
+### catch - throw
+
+    catch(:finish) do
+      1000.times do
+        x = rand(1000)
+        throw :finish if x = 123
+      end
+      puts "Generated 1000 random numbers without generating 123!"
+    end
+
+## Server
+
+### http
+You can create a basic html file called `index.html`:
+
+    <html>
+      <head>
+        <title>Welcome</title>
+      </head>
+      <body>
+        <h1>Welcome !</h1>
+        <p>Hello World</p>
+      </body>
+    </html>
+
+And the code for the server `http.rb`:
+
+    require 'webrick'
+
+    server = WEBrick::HTTPServer.new( :Port => 9000, :DocumentRoot => Dir::pwd + "/" )
+
+    class MyServlet < WEBrick::HTTPServlet::AbstractServlet
+      def do_GET(req, response)
+        response.body = File.open('./index.html', 'r')
+        response['Content-Type'] = "text/html"
+      end
+    end
+
+    server.mount("/", MyServlet)
+    trap("INT"){ server.shutdown }
+    server.start
+
+    $ ruby http.rb
 
 ## References
 - [Ruby Wizardry]() from Eric Weinstein
