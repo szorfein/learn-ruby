@@ -12,12 +12,14 @@ just learning ruby :)
 - [Numbers](#numbers)
 - [Date](#date)
 - [Random](#random)
+- [Symbols](#symbols)
 
 ## Strings
 - [Upcase-Downcase](#upcase-downcase)
 - [Long Text](#long-text)
 - [gsub](#gsub)
 - [regex](#regex)
+- [chomp](#chomp)
 
 ## Controls flow
 - [operators](#flow-operators)
@@ -81,8 +83,11 @@ just learning ruby :)
 ## Server
 - [http](#http)
 
+## Command Line
+- [with case](#with-case)
+- [optparse](#optparse)
+
 ## [References](#references)
----
 
 ## Basics
 
@@ -145,6 +150,17 @@ Conversion number
     >> puts rand(100000)
     47877
 
+### symbols
+Ruby use a many symbols for shorterer the code, the both bellow have the same result:
+
+    :x.class  # => Symbol
+    "x".class # => String
+
+Or with string:
+
+    "abc".to_sym # => :abc
+    :abc.to_s    # => "abc"
+
 ## Strings 
 
 ### upcase downcase
@@ -184,6 +200,11 @@ To cut a text in a variable like in lua or other languages
 
     x = "This is a test".match(/(\w+) (\w+)/ (\w+) (\w+)/)
     => x[0] = This , x[1] = is , x[2] = a , x[3] = test
+
+### chomp
+`chomp` remove the newline character `(aka \n)` from a string.
+
+    line.chomp.split(/,/)
 
 ## Controls Flow
 
@@ -859,6 +880,48 @@ And the code for the server `http.rb`:
     server.start
 
     $ ruby http.rb
+
+## Command Line
+
+### with case
+
+    command = ARGV.shift
+    when 'new'
+      make_new
+    when 'delete'
+      make_delete
+    when 'update'
+      make_update
+    end
+
+### optparse
+You can use `optparse` with regex too:
+
+    require 'optparse'
+    options = {}
+
+    option_parser = OptionParser.new do |opts|
+      opts.on("-i", "--iteration") do
+        options[:iteration] = true
+      end
+
+      opts.on("-u USER") do |user|
+        unless user =~ /^.+\..+$/
+          raise ArgumentError, "USER must be in 'first.last' format"
+        end
+        options[:user] = user
+      end
+
+      opts.on("-p PASSWORD") do |password|
+        unless password.length < 8
+          raise ArgumentError, "PASSWORD should have 8 or more character"
+        end
+        options[:password] = password
+      end
+    end
+
+    option_parser.parse!
+    puts options.inspect
 
 ## References
 - [Ruby Wizardry]() from Eric Weinstein
