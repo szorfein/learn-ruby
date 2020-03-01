@@ -1,5 +1,5 @@
 # learning-ruby
-just learning ruby :)
+Just learning ruby, and save what i learn here.
 
 ## Table of contents
 
@@ -54,6 +54,7 @@ just learning ruby :)
 - [********asterix parameters](#asterix-parameters)
 - [function default or optional](#function-default-or-optional)
 - [yield](#yield)
+- [callback](#callback)
 
 ## Class
 - [definition](#class-definition)
@@ -79,6 +80,11 @@ just learning ruby :)
 ## Errors
 - [raise](#raise)
 - [handle](#handle)
+- [catch throw](#catch---throw)
+
+## Writing Test
+- [TestUnit](#Test::Unit)
+- [RSpec](#rspec)
 
 ## Server
 - [http](#http)
@@ -161,6 +167,11 @@ Or with string:
     "abc".to_sym # => :abc
     :abc.to_s    # => "abc"
 
+Initialize a variable in a shorter way:
+
+    @first_name = '' unless @first_name # long version
+    @first_name ||= '' # shorter
+
 ## Strings 
 
 ### upcase downcase
@@ -172,7 +183,19 @@ Or with string:
     hello world
 
 ### long-text
-To write long text, use `<<` followed by any word
+With `%q{ }` (single quoted)
+
+    x = %q{
+    This is the string
+    And a second REALLY usefull line
+    }
+
+Or the variant `%Q{ }` (double quoted)
+
+    %Q<The time is now \
+    #{Time.now}>
+
+To write very long text, prefer using `<<` followed by any word
 
     x = <<END_TEXT
     This is the string
@@ -180,21 +203,25 @@ To write long text, use `<<` followed by any word
     END_TEXT
     => "This is the string\nAnd a second REALLY usefull line\n"
 
-Or with `%q{ }`
-
-    x = %q{
-    This is the string
-    And a second REALLY usefull line
-    }
-
 ### gsub
 
     >> puts "This is a test".gsub('i', '')
     ths s a test
 
+An exemple of function to filter HTML code:
+
+      def html_escape(s)
+        s.to_s.gsub(/&/, "&amp;").gsub(/\"/, "&quot;").
+          gsub(/>/, "&gt;").gsub(/</, "&lt;")
+      end
+
 ### regex
     
     puts "String contains no digits" unless "This is a test" =~ /[0-9]/
+
+To filter a time
+
+    puts /\d\d:\d\d (AM|PM)/ =~ '10:24 PM' # => 0
 
 To cut a text in a variable like in lua or other languages
 
@@ -475,6 +502,59 @@ Second example:
     >> block_party_part_two('Haldo') { |name| puts "This is #{name}'s party!" }
     This is Haldo's party!
     
+Last example with a logging function:
+
+    class SomeApp
+      with_logging('load') { @doc = Document.load( 'resume.txt' ) }
+      with_logging('save') { @doc.save }
+
+      def with_logging(description)
+        begin
+          @logger.debug( "Starting #{description}" )
+          yield
+          @logger.debug( "Completed #{description}" )
+        rescue
+          @logger.error( "#{description} failed !" )
+          raise
+        end
+      end
+    end
+    
+### Callback
+Creating a callback is make by prefix an argument with `&block_name`, the block can be execute with his `call()` method `block_name.call()`
+
+    class Document
+      def on_save( &block )
+        @save_listener = block
+      end
+
+      def on_load( &block )
+        @load_listener = block
+      end
+
+      def load( path )
+        @content = File.read( path )
+        @load_listener.call( self, path ) if @load.listener
+      end
+
+      def save( path )
+        File.open( path, 'w' ) { |f| f.print( @content ) }
+        @save_listener.call( self, path ) if @save_listener
+      end
+    end
+
+And this is can be used like this:
+
+    my_doc = Document.new( 'Block Based Example', 'russ', '' )
+
+    my_doc.on_load do |doc|
+      puts "Hey, i've been loaded!"
+    end
+
+    my_doc.on_save do |doc|
+      puts "Hey, i've been saved!"
+    end
+
 ### class definition
 
     class Minstrel
@@ -667,6 +747,39 @@ We can include a module in a class like this:
     >> paint.color
     => :green
 
+Module can serve to store programs variable, ex:
+
+    module Rendering
+      DEFAULT_FONT = Font.new( 'default' )
+      DEFAULT_PAPER_SIZE = PaperSize.new
+    end
+
+Access directly without `include`:
+
+    Rendering::DEFAULT_PAPER_SIZE
+
+With code error:
+
+    module ErrorCode
+      OK = 0
+      ERROR = 1
+      INTERNAL = 2
+    end
+
+    class SomeSQLiteApps
+      include ErrorCode
+
+      def print_status_message( status )
+        if status == ERROR
+          puts "It failed"
+        elsif status == OK
+          puts "it worked"
+        else
+          puts "status was #{status}"
+        end
+      end
+    end
+
 ### constants
 Constant are variables with a value who don't change once you set them.  
 
@@ -847,6 +960,8 @@ To raise an error if a class is create without argument.
       puts "Generated 1000 random numbers without generating 123!"
     end
 
+## Writing Test
+
 ## Server
 
 ### http
@@ -927,3 +1042,4 @@ You can use `optparse` with regex too:
 - [Ruby Wizardry]() from Eric Weinstein
 - [The Book of Ruby]() from Huw Collingbourne
 - [Beginning Ruby]() from Peter Cooper
+- [Eloquent Ruby]() from ...
