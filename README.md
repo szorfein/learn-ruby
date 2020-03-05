@@ -83,7 +83,7 @@ Just learning ruby, and save what i learn here.
 - [catch throw](#catch---throw)
 
 ## Writing Test
-- [TestUnit](#Test::Unit)
+- [Minitest](#minitest)
 - [RSpec](#rspec)
 
 ## Server
@@ -961,6 +961,25 @@ To raise an error if a class is create without argument.
     end
 
 ## Writing Test
+
+### minitest
+Ruby come with the default unit test `minitest`, a reimplementation of `Test::Unit`.
+
+    class String
+      def titleize
+        self.gsub(/(\A|\s)\w/) { |letter| letter.upcase }
+      end
+    end
+
+    require 'minitest/autorun'
+
+    class TestTitleize << Minitest::Test
+      def test_basic
+        assert_equal("This Is A Test", "this is a test".titleize)
+        assert_equal("Another Test 1234", "another test 1234".titleize)
+        assert_equal("We're Testing", "we're testing".titleize)
+      end
+    end
 
 ## Server
 
