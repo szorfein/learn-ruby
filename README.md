@@ -76,6 +76,7 @@ Just learning ruby, and save what i learn here.
 - [close](#close)
 - [lines count](#lines-count)
 - [delete](#delete-file)
+- [CVS format](#cvs-format)
 
 ## Errors
 - [raise](#raise)
@@ -90,8 +91,10 @@ Just learning ruby, and save what i learn here.
 - [http](#http)
 
 ## Command Line
+- [Interactive Menu](#interactive-menu)
 - [with case](#with-case)
 - [optparse](#optparse)
+- [GLI](#GLI)
 
 ## [References](#references)
 
@@ -928,6 +931,37 @@ Or with `readlines`
     lines = File.readlines('lunch.txt')
     line_count = lines.size
 
+# Different File Formats
+### YAML
+### PStore
+### SQLite
+### CVS
+A `CVS` format look like this, a simple file text where each fields are separate by a `,`:
+
+    $ cat people.txt
+    Fred Bloggs,Manager,Male,45
+    Laura Smith,Cook,Female,22
+    Debbie Watts,Professor,Female,38
+
+To use the file in ruby, we use the `require 'cvs'`:
+
+    require 'cvs'
+    CVS.open('people.txt').each do |person|
+      p person
+    end
+
+    # => ["Fred Blogg", "Manager", "Male", "45"]
+    # => ["Laura Smith", "Cook", "Female", "22"]
+    # => ["Debbie Watts", "Professor", "Female", "38"]
+
+Or even this version:
+
+    require 'cvs'
+    people = CVS.parse(File.read("people.txt"))
+    puts people[0][0] # => Fred Blogg
+    puts people[0][1] # => Laura Smith
+    puts people[0][1] # => Debbie Watts
+
 ## Errors
 
 ### raise
@@ -1017,7 +1051,31 @@ And the code for the server `http.rb`:
 
 ## Command Line
 
+### Interactive Menu
+An example of interactive menu for a terminal app:
+
+    loop do
+      puts %q{Please select an option:
+
+        1. Create people table
+        2. Add a person
+        3. Look for a person
+        4. Quit}
+
+     case get.chomp
+       when '1'
+         create_table
+       when '2'
+         add_person
+       when '3'
+         find_person
+       when '4'
+         disconnect_and_quit
+      end
+    end
+
 ### with case
+Get the first argument to do something:
 
     command = ARGV.shift
     when 'new'
@@ -1057,8 +1115,57 @@ You can use `optparse` with regex too:
     option_parser.parse!
     puts options.inspect
 
+### GLI
+
+## Writing a Gem
+Initialize your project with bundler:
+
+    $ bundler gem my_project_name
+
++ `lib` should contain all the code related to the library.
++ `pkg` is a temporary directory to build your gem.
++ `test` contain all tests.
++ `doc` contain all docs.
++ `bin` contain all executables.
++ `ext` source code for extensions (e.g: c, sh)
+
+### gemspec
+The gemspec above look like this:
+```rb
+Gem::Specification.new do |s|
+  s.name = 'my_project_name'
+  s.version = '0.0.1'
+  s.summary = 'Cool code about cool lib for do cool things...'
+  s.platform = Gem::Platform::RUBY
+  s.files = Dir.glob("**/**/**")
+  s.test_files = Dir.glob("test/*_test.rb")
+  s.author = "szorfein"
+  s.email = "szorfein@protonmail.com"
+  s.has_rdoc = false
+  s.required_ruby_version = '>= 2.5.0'
+end
+```
+## Running test
+For running all the test, we can use `rake`:
+
+    $ rake test
+
+## Build the gem
+
+    $ gem build my_project_name.gemspec
+
+This make a gem called `my_project_name-1.0.0.gem`.
+
+## Push the gem
+Sending the gem at `http://rubygems.org` is a simple task too:
+
+    $ gem push my_project_name-1.0.0.gem
+
 ## References
-- [Ruby Wizardry]() from Eric Weinstein
-- [The Book of Ruby]() from Huw Collingbourne
-- [Beginning Ruby]() from Peter Cooper
-- [Eloquent Ruby]() from ...
+### Books
+- [Ruby Wizardry]() by Eric Weinstein
+- [Beginning Ruby]() by Peter Cooper
+- [The Book of Ruby]() by Huw Collingbourne
+- [Eloquent Ruby]() by Russ Olsen
+### Links
+- [writing a gemspec](https://piotrmurach.com/articles/writing-a-ruby-gem-specification/)
