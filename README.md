@@ -1062,7 +1062,7 @@ An example of interactive menu for a terminal app:
         3. Look for a person
         4. Quit}
 
-     case get.chomp
+     case gets.chomp
        when '1'
          create_table
        when '2'
@@ -1138,25 +1138,39 @@ Gem::Specification.new do |s|
   s.summary = 'Cool code about cool lib for do cool things...'
   s.platform = Gem::Platform::RUBY
   s.files = Dir.glob("**/**/**")
-  s.test_files = Dir.glob("test/*_test.rb")
+  s.test_files = Dir.glob("test/test_*.rb")
   s.author = "szorfein"
   s.email = "szorfein@protonmail.com"
   s.has_rdoc = false
   s.required_ruby_version = '>= 2.5.0'
+  s.licenses = "MIT"
 end
 ```
+Check the reference if need: http://guides.rubygems.org/specification-reference/
+
 ## Running test
 For running all the test, we can use `rake`:
 
     $ rake test
 
 ## Build the gem
+For keep secure, you may need to create a self signed certificate to ensure your identity [ref](https://guides.rubygems.org/security/).
 
+    $ chmod 755 bin/my_project_name
     $ gem build my_project_name.gemspec
 
 This make a gem called `my_project_name-1.0.0.gem`.
 
-## Push the gem
+### Install your gem
+
+    $ gem install my_project_name-0.0.1.gem
+    $ gem list my_project_name -d
+    ...
+    Installed at: /home/user/.gem/ruby/2.X.0/bin
+
+You can use the gem by adding the path to your PATH environment.
+
+### Push the gem
 Sending the gem at `http://rubygems.org` is a simple task too:
 
     $ gem push my_project_name-1.0.0.gem
