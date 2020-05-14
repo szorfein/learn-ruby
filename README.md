@@ -4,6 +4,7 @@ Just learning ruby, and save what i learn here.
 ## Table of contents
 
 ## Basic Things
+- [Display Text](#display-text)
 - [Operators](#operators)
 - [Prev-Next](#prev-next)
 - [Reverse](#reverse)
@@ -62,6 +63,7 @@ Just learning ruby, and save what i learn here.
 - [class variable](#class-variable)
 - [inherit](#inherit)
 - [super](#super)
+- [self](#self)
 - [Nested class](#nested-class)
 
 ## Modular Code
@@ -99,6 +101,21 @@ Just learning ruby, and save what i learn here.
 ## [References](#references)
 
 ## Basics
+
+### Display Text
+Display text with newline character:
+
+    puts "Hello"
+
+Without:
+
+    print "Hello"
+
+Like printf: (there are also %d (decimal) , %s (string) , %f (float) , %x (hexa))
+
+    price = 4.44
+    puts "$#{"%.2f." % price}" 
+    #=> $4.44
 
 ### Prev Next
 
@@ -559,6 +576,7 @@ And this is can be used like this:
     end
 
 ### class definition
+To create a new class:
 
     class Minstrel
       def initialize(name)
@@ -579,6 +597,24 @@ To use:
     >> wherefore = Minstrel.new('Wherefore')
     >> wherefoce.introduce
     My name is Wherefore!
+
+Class can also be created dinamically
+
+    Minstrel = Object.new
+    def Minstrel.introduce(name)
+      puts 'My name is #{name}
+    end
+    def Minstrel.sing
+      puts 'Tralala'
+    end
+
+You may need to check if a function exist in this case with `respond_to?`:
+
+    if Minstrel.respond_to?("sing")
+      Minstrel.sing
+    else
+      puts "There are no method 'sing' available"
+    end
 
 ### struct
 There are another way to create class with the keyword `struct`, the example above can be rewrite like this:
@@ -642,8 +678,11 @@ Write a file called `minstrel.rb`:
     >> minstrel = Minstrel.new('wherefore')
     >> minstrel.name
     "whereforce"
+    >> minstrel.name = "othername"
+    >> minstrel.name
+    "othername"
   
-With the special method `attr_accessor`.
+We can use `attr_writer` or `attr_accessor` like a shortcut for setter and getter.
 
     class Minstrel
       attr_accessor :name
@@ -657,6 +696,10 @@ With the special method `attr_accessor`.
 
     >> whereforce = Minstrel.new("whereforce")
     whereforce.name
+    "whereforce"
+    >> whereforce.name = "othername"
+    >> whereforce.name
+    "othername"
 
 ### inherit
 For a main class `MySuperclass`
@@ -707,6 +750,39 @@ The `super` keyword is used to be able to use all variables from the main class,
     Just made a new dog!
     => #<Dog:0x... @name="Bigelow", @legs=4>
 
+### Self
+
+    class C
+      def C.x
+        puts "Class method of class C"
+        puts "self: #{self}
+      end
+    end
+    #=> Class method of class C
+    #=> self: C
+
+Can be rewrite like this:
+
+    class C
+      def self.x
+        puts "Class method of class C"
+        puts "self: #{self}
+      end
+    end
+
+Or even, if you're define multiple class method:
+
+    class C
+      class << self
+        def x
+          # block x
+        end
+        def y
+          # block y
+        end
+      end
+    end
+
 ### nested class
 A nested class is a class in another class:
 
@@ -750,7 +826,7 @@ We can include a module in a class like this:
     >> paint.color
     => :green
 
-Module can serve to store programs variable, ex:
+Module can serve to store programs variable too, ex:
 
     module Rendering
       DEFAULT_FONT = Font.new( 'default' )
