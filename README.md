@@ -19,8 +19,12 @@ Just learning ruby, and save what i learn here.
 - [Upcase-Downcase](#upcase-downcase)
 - [Long Text](#long-text)
 - [gsub](#gsub)
-- [regex](#regex)
 - [chomp](#chomp)
+
+## Regex
+- [regex](#regex)
+- [match](#match)
+- [scan](#scan)
 
 ## Controls flow
 - [operators](#flow-operators)
@@ -81,8 +85,8 @@ Just learning ruby, and save what i learn here.
 - [CVS format](#cvs-format)
 
 ## Errors
+- [rescue](#rescue)
 - [raise](#raise)
-- [handle](#handle)
 - [catch throw](#catch---throw)
 
 ## Writing Test
@@ -223,19 +227,12 @@ To write very long text, prefer using `<<` followed by any word
     END_TEXT
     => "This is the string\nAnd a second REALLY usefull line\n"
 
-### gsub
+### chomp
+`chomp` remove the newline character `(aka \n)` from a string.
 
-    >> puts "This is a test".gsub('i', '')
-    ths s a test
+    line.chomp.split(/,/)
 
-An exemple of function to filter HTML code:
-
-      def html_escape(s)
-        s.to_s.gsub(/&/, "&amp;").gsub(/\"/, "&quot;").
-          gsub(/>/, "&gt;").gsub(/</, "&lt;")
-      end
-
-### regex
+## Regex
     
     puts "String contains no digits" unless "This is a test" =~ /[0-9]/
 
@@ -243,15 +240,40 @@ To filter a time
 
     puts /\d\d:\d\d (AM|PM)/ =~ '10:24 PM' # => 0
 
+### match
 To cut a text in a variable like in lua or other languages
 
     x = "This is a test".match(/(\w+) (\w+)/ (\w+) (\w+)/)
     => x[0] = This , x[1] = is , x[2] = a , x[3] = test
 
-### chomp
-`chomp` remove the newline character `(aka \n)` from a string.
+Capture string in several variables: (\s+) for space|tab|newline, (\w+) any digit|character|underscore
 
-    line.chomp.split(/,/)
+    re = %r{(?<first>\w+)\s+((?<middle>\w\.)\s+(?<last>\w+)}
+    m = re.match("David A. Black")
+    #=> #<MatchData "David A. Black" first:"David" middle:"A." last:"Black">
+
+You have access to each field like with hashes
+
+    m[:first]
+    #=> David
+
+### scan
+The scan method goes from left to right though a string.
+  
+    "testing 1 2 3 testing 4 5 6".scan(/\d/)
+    #=> ["1", "2", "3", "4", "5", "6"]
+
+### gsub
+
+    >> puts "This is a test".gsub('i', '')
+    ths s a test
+
+An exemple of function to filter HTML code:
+
+    def html_escape(s)
+      s.to_s.gsub(/&/, "&amp;").gsub(/\"/, "&quot;").
+        gsub(/>/, "&gt;").gsub(/</, "&lt;")
+    end
 
 ## Controls Flow
 
@@ -312,12 +334,20 @@ Rather than use the negation `!something`, use the keyword `unless`:
     puts "You are a " + type
 
 ### input gets
+To capture a line:
 
     print "Where to? (N, E, S, W): "
     direction = gets.chomp
 
     puts "#{direction}, you say? A fine choice!"
 
+To capture only one char:
+
+    char = STDIN.getc
+    hello
+    puts char
+    #=> h
+    
 ### while
 
     while something_is_the_case
@@ -358,10 +388,15 @@ Create an array:
     >> p order_two
     ["sunny_side_up_egg", "sunny_side_up_egg", "sunny_side_up_egg"]
 
-Or shorcut with `%w( )`
+Or shorcut with `%w( )` and single quoted, when need to use double quote (for variable) use `%W( )`.
 
     order_two = %w(sunny_side_up_egg sunny_side_up_egg sunny_side_up_egg)
     p order_two
+
+Or even with a block:
+
+    Array.new(3) { |i| 10 * (i + 1) }
+    #=> [10, 20, 30]
 
 ### fist
 
@@ -413,6 +448,7 @@ look an element
     "observe"
 
 ### Hashes
+Defining a hash
 
     our_heroes = {
       :the_king => 'the ruler of the kingdom',
@@ -424,6 +460,11 @@ Display one element
 
     p our_heroes[:the_king]
     'the ruler of the kingdom'
+
+We can define a hash with the `Hash` keyword too:
+
+    Hash["Connecticut", "CT", "Delaware", "DE"]
+    #=> {"Connecticut"=>"CT", "Delaware"=>"DE"]
 
 ### keys values
 use keys to show an array of keys
@@ -930,20 +971,34 @@ If you need modifying `variable` or `function` from a module, you have to use `e
 ## I/O
 
 ### open
+There are 2 methods, `File.read` return the whole file
 
-    file = File.open('lunch.txt', 'r')
-    file.read
-    "One KAT-MAN-BLUE BURGER, PLEASE\n"
+    file.read("/etc/tor/torrc")
+    #=> "User tor\nPIDFile /run/tor/tor.pid\nData...\n"
 
+And `File.readlines` return an array with all lines
+
+    File.readlines("/etc/tor/torrc")
+    #=> ["User tor\n", "PIDFile /run/tor/tor.pid\n", "Data...\n"]
 
 One line way
 
-    File.open('lunch.txt', 'r') { |file| file.read }
-    "One KAT-MAN-BLUE BURGER, PLEASE\n"
-
-Or:
-
     File.open('lunch.txt').each { |line| puts line }
+
+Another example to search a value in a config file for Linux, if we search the value of `TransPort XXXX` in the `/etc/tor/torrc`:
+
+    opt = 0
+    File.open("/etc/tor/torrc") do |f|
+      f.inject(0) do |total,line|
+        field = line.split('\n')
+        if field[0] =~ /^TransPort/
+          tmp = field.to_s
+          opt = tmp.match(/\d+/)
+        end
+      end
+    end
+    puts opt
+    #=> 9040
 
 ### close
 Always thing to close a file, we can write a class like this:
@@ -996,6 +1051,11 @@ Always thing to close a file, we can write a class like this:
     File.exist? 'lunch.txt'
     => true
 
+    File.empty? 'XXX'
+    File.symlink? 'XXX'
+    File.readable? 'XXX'
+    File.zero? 'XXX'
+
 ### count lines
 
     line_count = 0
@@ -1040,8 +1100,21 @@ Or even this version:
 
 ## Errors
 
+### rescue
+Return simple message error with `rescue`
+
+    print "Enter a number: "
+    n = gets.to_i
+    begin
+      result = 100 / n
+    rescue
+      puts "Number didn't work. Was it zero???"
+      exit
+    end
+    puts "100/#{n} is #{result}."
+
 ### raise
-To raise an error if a class is create without argument.
+To raise an error if a class is call without the expected argument.
 
     class BadDataException < RuntimeError
     end
@@ -1052,12 +1125,19 @@ To raise an error if a class is create without argument.
       end
     end
 
-### handle
+Or on argument error
 
-    begin 
-      puts 10 / 0
-    rescue
-      puts "You caused an error!"
+    def fussy_method(x)
+      raise ArgumentError, "I need a number under 10" unless x < 10
+    end
+    fussy_method(20)
+
+We can write the above example like this too:
+
+    begin
+      fussy_method(20)
+    rescue ArgumentError
+      puts "I need a number under 10"
     end
 
 ### catch - throw
