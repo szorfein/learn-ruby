@@ -89,6 +89,10 @@ Just learning ruby, and save what i learn here.
 - [raise](#raise)
 - [catch throw](#catch---throw)
 
+## Objects
+- [lambda](#lambda)
+- [Proc](#proc)
+
 ## Writing Test
 - [Minitest](#minitest)
 - [RSpec](#rspec)
@@ -274,6 +278,14 @@ An exemple of function to filter HTML code:
       s.to_s.gsub(/&/, "&amp;").gsub(/\"/, "&quot;").
         gsub(/>/, "&gt;").gsub(/</, "&lt;")
     end
+
+Example by removing unwanted characters
+
+    def normalize(name)
+      name.gsub!(/[^-a-z'.\s]/i, "")
+    end
+    normalize("123David!! Bl%a9ck")
+    #=> David Black
 
 ## Controls Flow
 
@@ -1040,12 +1052,6 @@ Always thing to close a file, we can write a class like this:
 
     File.delete("file1.txt")
 
-### Change directory
-
-    >> Dir.chdir("/tmp")
-    >> puts Dir.pwd
-    /tmp
-
 ### avoid error
 
     File.exist? 'lunch.txt'
@@ -1066,6 +1072,27 @@ Or with `readlines`
 
     lines = File.readlines('lunch.txt')
     line_count = lines.size
+
+## Dir
+
+### Change directory
+
+    >> Dir.chdir("/tmp")
+    >> puts Dir.pwd
+    /tmp
+
+### glob
+With a linux shell, you make for example:
+ 
+    ls *.png
+
+With Ruby:
+
+    Dir.glob("*.png")
+
+Or even
+
+    Dir["*.png"].each {|f| puts f }
 
 # Different File Formats
 ### YAML
@@ -1150,6 +1177,49 @@ We can write the above example like this too:
       puts "Generated 1000 random numbers without generating 123!"
     end
 
+## Objects
+
+### proc
+
+    pr = Proc.new { puts "Inside a Proc's block }
+    pr.call
+    #=> Inside a Proc's block
+
+### lambda
+With a short constructor `->`
+
+    lam = -> { puts "hi" }
+    lam.call
+    #=> hi
+
+Or with args:
+
+    mult = ->(x,y) { x * y }
+    mult.call(3,4)
+    #=> 12
+
+### Instance Eval
+Example usage of `instance_eval` to create object:
+
+    joe = Person.new do
+      name "Joe"
+      age 37
+    end
+
+The class Person look like this:
+
+    class Person
+      def initialize(&block)
+        instance_eval(&block)
+      end
+      def name(name=nil)
+        @name ||= name
+      end
+      def age(age=nil)
+        @age ||= age
+      end
+    end
+
 ## Writing Test
 
 ### minitest
@@ -1206,6 +1276,20 @@ And the code for the server `http.rb`:
     $ ruby http.rb
 
 ## Command Line
+
+### Delete files interactively
+
+    Dir["/tmp/*"].each do |f|
+      next unless File.exist?(f)
+      print "Delete #{f}?"
+      answer = $stdin.gets
+      case answer
+      when /^y/
+        File.unlink(f)
+      when /^q/
+        break
+      end
+    end
 
 ### Interactive Menu
 An example of interactive menu for a terminal app:
