@@ -93,6 +93,9 @@ Just learning ruby, and save what i learn here.
 - [lambda](#lambda)
 - [Proc](#proc)
 
+## System
+- [uid](#uid)
+
 ## Writing Test
 - [Minitest](#minitest)
 - [RSpec](#rspec)
@@ -105,6 +108,11 @@ Just learning ruby, and save what i learn here.
 - [with case](#with-case)
 - [optparse](#optparse)
 - [GLI](#GLI)
+
+## Writing a Gem
+
+## Document Code
+- [RDoc](#rdoc)
 
 ## [References](#references)
 
@@ -124,6 +132,12 @@ Like printf: (there are also %d (decimal) , %s (string) , %f (float) , %x (hexa)
     price = 4.44
     puts "$#{"%.2f." % price}" 
     #=> $4.44
+
+Other example:
+
+    price is: %10d % 123 #=> 123
+    price is: %10.2f 123 #=> 123.00
+    price is: %08x % 1234567 #=> 0012d687
 
 ### Prev Next
 
@@ -286,6 +300,18 @@ Example by removing unwanted characters
     end
     normalize("123David!! Bl%a9ck")
     #=> David Black
+
+You can replace a string by other too
+
+    text.gsub!("rails", "Rails")
+    text.gsub!(/\brails\b/, "Rails")
+    
+With a block
+
+    text = "RUBY Java perl PYtHon"
+    lang = /ruby|java|perl|python/i
+    text.gsub!(lang) {|l| l.capitalize }
+    #=> Ruby Java Perl Python
 
 ## Controls Flow
 
@@ -1012,6 +1038,15 @@ Another example to search a value in a config file for Linux, if we search the v
     puts opt
     #=> 9040
 
+Or yet shorter:
+
+    File.open("/etc/tor/torrc") do |f|
+      file.each do |line|
+        puts $~[1] if line.match(/transport ([0-9]*)/i)
+      end
+    end
+    #=> 9040
+
 ### close
 Always thing to close a file, we can write a class like this:
 
@@ -1220,6 +1255,19 @@ The class Person look like this:
       end
     end
 
+## System
+
+### uid
+For search actual uid, rather than use `id -u`, you can use the native solution:
+
+    sys = Process::Sys
+    puts "UID=#{sys.getuid}, GID=#{sys.getgid}"
+    #=> UID=1000, GID=1000
+
+### Permission
+
+    File.chmod(0644, "my_file")
+
 ## Writing Test
 
 ### minitest
@@ -1415,11 +1463,36 @@ Sending the gem at `http://rubygems.org` is a simple task too:
 
     $ gem push my_project_name-1.0.0.gem
 
+## Document Code
+
+### RDoc
+RDoc syntax look like markdown.
+```ruby
+# This is my class
+# Usage:
+#   include Foo
+class Foo
+  # Method Foo#bar, you can write
+  # __italic__
+  # or *bold*
+  # for code sample, use +super code+
+  def bar
+  end
+end
+```
+When you finish of documenting your code, launch in your project a:
+
+    rdoc
+
+It will create a new directory `doc`
+
 ## References
 ### Books
 - [Ruby Wizardry]() by Eric Weinstein
 - [Beginning Ruby]() by Peter Cooper
 - [The Book of Ruby]() by Huw Collingbourne
 - [Eloquent Ruby]() by Russ Olsen
+- [Ruby Phrasebook]() by Jason Clinton 
+
 ### Links
 - [writing a gemspec](https://piotrmurach.com/articles/writing-a-ruby-gem-specification/)
