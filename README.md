@@ -83,6 +83,7 @@ Just learning ruby, and save what i learn here.
 - [lines count](#lines-count)
 - [delete](#delete-file)
 - [CVS format](#cvs-format)
+- [Erb template](#erb)
 
 ## Errors
 - [rescue](#rescue)
@@ -1160,6 +1161,14 @@ Or even this version:
     puts people[0][1] # => Laura Smith
     puts people[0][1] # => Debbie Watts
 
+### erb
+We can create template with `erb`:
+
+    require 'erb'
+    person = 'Matz!'
+    temp = ERB.new( "Hello, <%= person %>" )
+    puts temp.result( binding ) #=> Hello, Matz!
+
 ## Errors
 
 ### rescue
@@ -1466,16 +1475,34 @@ Sending the gem at `http://rubygems.org` is a simple task too:
 ## Document Code
 
 ### RDoc
-RDoc syntax look like markdown.
+RDoc syntax look like the markdown. A little example of a documented class:
+
 ```ruby
-# This is my class
+# This is my class, allows you to do great things !
 # Usage:
 #   include Foo
+#
+# Author:: John Smith (mailto:johnsmith@example.com)
+# Copyright:: MIT
+#
+# :title:Foo
 class Foo
+  # === Parameters
+  # * _debt_ = long-term debt
+  # * _equity_ = equity 
+  # === Example
+  # ratios = Ratios.new( 2703, 9876 )
+  def initialize( debt, equity )
+    @debt = debt
+    @equity = equity
+  end
   # Method Foo#bar, you can write
   # __italic__
   # or *bold*
   # for code sample, use +super code+
+  # Method bar display a string
+  # === Example
+  # Ratio.bar
   def bar
   end
 end
@@ -1484,7 +1511,9 @@ When you finish of documenting your code, launch in your project a:
 
     rdoc
 
-It will create a new directory `doc`
+It will create a new directory `doc`, you can look the doc with:
+ 
+    ri Foo#bar
 
 ## References
 ### Books
